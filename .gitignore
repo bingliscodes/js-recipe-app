@@ -3,6 +3,5 @@ node_modules/
 dist/
 src/js/api_key.js
 **/*.png
-node_modules
-node_modules
-node_modules
+.env
+

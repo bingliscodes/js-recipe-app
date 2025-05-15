@@ -9,20 +9,22 @@ import {
 import { addRecipeClick } from './add_recipe.js';
 import { addLoadSpinner, removeLoadSpinner } from './load_icon.js';
 import { renderBookmarks } from './bookmarks.js';
+import {
+  renderRecipesPreview,
+  addPageNumbers,
+  numPages,
+  curPage,
+} from './recipe_preview.js';
 
 const searchBar = document.querySelector('.search__field');
 const searchBtn = document.querySelector('.search__btn');
 const searchResults = document.querySelector('.results');
-const paginationContainer = document.querySelector('.pagination');
-const prevPageBtn = document.querySelector('.pagination__btn--prev');
-const nextPageBtn = document.querySelector('.pagination__btn--next');
 
-let numPages = 1;
-let curPage = 1;
 export const bookmarkContainer = document.querySelector('.bookmarks__list');
 export let selectedRecipePreview;
 export let selectedRecipeData;
 export let selectedRecipeId;
+export let allRecipesPagination;
 export const bookmarks = [];
 export let userRecipes = [];
 
@@ -55,7 +57,7 @@ const searchAPI = async function (searchText) {
     const recipeJSON = await res.json();
     removeLoadSpinner();
     const allRecipes = recipeJSON.data.recipes;
-    const allRecipesPagination = addPageNumbers(allRecipes);
+    allRecipesPagination = addPageNumbers(allRecipes);
     renderRecipesPreview(allRecipesPagination);
   } catch (err) {
     console.error(err);
@@ -71,78 +73,6 @@ searchBtn.addEventListener('click', async function (e) {
     console.error(err);
   }
 });
-
-/////////////////////////////////
-// Render the recipes in a list
-
-const renderRecipesPreview = function (recipes) {
-  /*
-  Takes in an array of recipe objects. Each recipe has props publisher, image_url, and title
-  */
-  recipes.forEach(recipe => {
-    const html = `
-            <li class="preview" data-recipe-id="${recipe.id}">
-              <a class="preview__link preview__link--active" href="#${
-                recipe.id
-              }">
-                <figure class="preview__fig">
-                  <img src=${
-                    recipe.image_url
-                  } alt=${`Image of ${recipe.title}`} />
-                </figure>
-                <div class="preview__data">
-                  <h4 class="preview__title">${recipe.title}</h4>
-                  <p class="preview__publisher">${recipe.publisher}</p>
-                  <div class="preview__user-generated">
-                    <svg>
-                      <use href="src/img/icons.svg#icon-user"></use>
-                    </svg>
-                  </div>
-                </div>
-              </a>
-            </li>
-            `;
-    searchResults.insertAdjacentHTML('afterbegin', html);
-  });
-};
-
-/////////////////////////////////
-// Implement pagination
-/*
-We want 10 results per page. Basically we want to implement the slider behavior using the floor of dividing by 10 to assign a page
-then we can show the first 10 when page 1 is selected, second 10 page 2, etc.
-*/
-const addPageNumbers = function (recipes) {
-  const recipesPagination = recipes.map((recipe, idx) => {
-    const pageNumber = Math.floor(idx / 10);
-    return { ...recipe, pageNumber };
-  });
-  numPages = recipesPagination[recipesPagination.length - 1].pageNumber + 1;
-  return recipesPagination;
-};
-const renderPageButtons = function () {
-  /*
-  Dynamically render page buttons and add event listeners.
-  We always start on page one.
-  We only show the prev page button when not on page one
-  */
-
-  if (numPages === 1) return;
-
-  nextPageBtn.addEventListener('click', function () {
-    if (curPage === numPages) return;
-    curPage++;
-    console.log(curPage);
-  });
-
-  prevPageBtn.addEventListener('click', function () {
-    if (curPage === 1) return;
-    curPage--;
-    console.log(curPage);
-  });
-};
-
-renderPageButtons();
 
 /////////////////////////////////
 // Display Recipe
