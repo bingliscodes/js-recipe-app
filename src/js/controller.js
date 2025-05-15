@@ -19,7 +19,6 @@ export let selectedRecipePreview;
 export let selectedRecipeData;
 export let selectedRecipeId;
 export let searchResultsArr;
-export let allRecipesPagination;
 export const bookmarks = [];
 export let userRecipes = [];
 
@@ -36,28 +35,6 @@ const timeout = function (s) {
 
 ///////////////////////////////////////
 //https://forkify-api.jonas.io/api/v2/recipes?search=pizza&key=<APIKEY>to search
-
-/////////////////////////////////
-// User search -> API call
-
-// const searchAPI = async function (searchText) {
-//   try {
-//     addLoadSpinner(searchResults);
-//     const res = await fetch(
-//       `https://forkify-api.jonas.io/api/v2/recipes?search=${searchText}&key=${API_KEY}`
-//     );
-
-//     if (!res.ok) throw new Error('Error getting recipes');
-
-//     const recipeJSON = await res.json();
-//     removeLoadSpinner();
-//     const allRecipes = recipeJSON.data.recipes;
-//     //allRecipesPagination = addPageNumbers(allRecipes);
-//     //renderRecipesPreview(allRecipesPagination);
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
 
 searchBtn.addEventListener('click', async function (e) {
   e.preventDefault();
