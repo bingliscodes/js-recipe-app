@@ -4,17 +4,11 @@ import {
   renderRecipe,
   clearRecipeContainer,
   recipeContainer,
-  bookmarkedRecipes,
 } from './render_recipe.js';
 import { addRecipeClick } from './add_recipe.js';
 import { addLoadSpinner, removeLoadSpinner } from './load_icon.js';
 import { renderBookmarks } from './bookmarks.js';
-import {
-  renderRecipesPreview,
-  addPageNumbers,
-  numPages,
-  curPage,
-} from './recipe_preview.js';
+import { renderRecipesPreview, searchAPI } from './recipe_preview.js';
 
 const searchBar = document.querySelector('.search__field');
 const searchBtn = document.querySelector('.search__btn');
@@ -24,6 +18,7 @@ export const bookmarkContainer = document.querySelector('.bookmarks__list');
 export let selectedRecipePreview;
 export let selectedRecipeData;
 export let selectedRecipeId;
+export let searchResultsArr;
 export let allRecipesPagination;
 export const bookmarks = [];
 export let userRecipes = [];
@@ -45,24 +40,24 @@ const timeout = function (s) {
 /////////////////////////////////
 // User search -> API call
 
-const searchAPI = async function (searchText) {
-  try {
-    addLoadSpinner(searchResults);
-    const res = await fetch(
-      `https://forkify-api.jonas.io/api/v2/recipes?search=${searchText}&key=${API_KEY}`
-    );
+// const searchAPI = async function (searchText) {
+//   try {
+//     addLoadSpinner(searchResults);
+//     const res = await fetch(
+//       `https://forkify-api.jonas.io/api/v2/recipes?search=${searchText}&key=${API_KEY}`
+//     );
 
-    if (!res.ok) throw new Error('Error getting recipes');
+//     if (!res.ok) throw new Error('Error getting recipes');
 
-    const recipeJSON = await res.json();
-    removeLoadSpinner();
-    const allRecipes = recipeJSON.data.recipes;
-    allRecipesPagination = addPageNumbers(allRecipes);
-    renderRecipesPreview(allRecipesPagination);
-  } catch (err) {
-    console.error(err);
-  }
-};
+//     const recipeJSON = await res.json();
+//     removeLoadSpinner();
+//     const allRecipes = recipeJSON.data.recipes;
+//     //allRecipesPagination = addPageNumbers(allRecipes);
+//     //renderRecipesPreview(allRecipesPagination);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
 searchBtn.addEventListener('click', async function (e) {
   e.preventDefault();

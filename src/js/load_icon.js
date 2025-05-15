@@ -17,5 +17,6 @@ export const addLoadSpinner = function (element) {
 };
 
 export const removeLoadSpinner = function () {
-  document.querySelector('.spinner').remove();
+  if (document.querySelector('.spinner'))
+    document.querySelector('.spinner').remove();
 };
